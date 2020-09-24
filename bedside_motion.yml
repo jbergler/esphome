@@ -1,0 +1,54 @@
+substitutions:
+  name: bedside_motion
+  platform: ESP8266
+  board: d1_mini
+
+<<: !include defaults.yml
+
+output:
+  - platform: esp8266_pwm
+    pin: GPIO15
+    id: led_1_pin
+  - platform: esp8266_pwm
+    pin: GPIO0
+    id: led_2_pin
+
+light:
+  - platform: monochromatic
+    id: led_1
+    output: led_1_pin
+    name: "LED 1"
+    restore_mode: ALWAYS_OFF
+  - platform: monochromatic
+    id: led_2
+    output: led_2_pin
+    name: "LED 2"
+    restore_mode: ALWAYS_OFF
+
+binary_sensor:
+  - platform: gpio
+    device_class: motion
+    id: motion_1
+    name: MOTION 1
+    pin: GPIO16
+    filters:
+      - delayed_off: 20s
+    on_press:
+      - if:
+          condition:
+            - sun.is_below_horizon
+          then:
+            - light.turn_on:
+                id: led_1
+                transition_length: 2s
+                brightness: 50%
+    on_release:
+      - light.turn_off:
+          id: led_1
+          transition_length: 8s
+  - platform: gpio
+    device_class: motion
+    id: motion_2
+    name: MOTION 2
+    pin: GPIO4
+

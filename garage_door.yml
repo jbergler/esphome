@@ -1,0 +1,43 @@
+substitutions:
+  name: garage_door
+  platform: ESP8266
+  board: d1_mini
+
+<<: !include defaults.yml
+
+switch:
+  - id: door_switch
+    platform: gpio
+    pin: D1
+    name: "Garage Door Switch"
+    restore_mode: ALWAYS_OFF
+    internal: true
+    
+binary_sensor:
+  - id: door_sensor
+    platform: gpio
+    pin: D8
+    name: "Garage Door Closed"
+    filters:
+      - delayed_on: 1000ms
+      - delayed_off: 1000ms
+    internal: true
+
+cover:
+  - platform: template
+    name: "Garage Door"
+    device_class: garage
+    open_action:
+      - switch.turn_on: door_switch
+      - delay: 0.1s
+      - switch.turn_off: door_switch
+    close_action:
+      - switch.turn_on: door_switch
+      - delay: 0.1s
+      - switch.turn_off: door_switch
+    lambda: |-
+      if (id(door_sensor).state) {
+        return COVER_CLOSED;
+      } else {
+        return COVER_OPEN;
+      }

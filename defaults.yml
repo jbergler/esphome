@@ -1,0 +1,45 @@
+esphome:
+  name: ${name}
+  platform: ${platform}
+  board: ${board}
+  build_path: ./.build/${name}
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: false
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  reboot_timeout: 1h
+
+ota:
+
+time:
+  - platform: homeassistant
+
+sun:
+  latitude: !secret lat
+  longitude: !secret lng
+
+sensor:
+  - platform: uptime
+    name: Device Uptime
+  - platform: wifi_signal
+    name: WiFi Signal
+    update_interval: 60s
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: WiFi IP
+    ssid:
+      name: WiFi SSID
+    bssid:
+      name: WiFi BSSID
+    mac_address:
+      name: WiFi MAC
