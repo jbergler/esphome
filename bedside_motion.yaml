@@ -32,16 +32,17 @@ binary_sensor:
     name: MOTION 1
     pin: GPIO16
     filters:
-      - delayed_off: 20s
+      - delayed_off: 15s
     on_press:
       - if:
           condition:
-            - sun.is_below_horizon
+            - sun.is_below_horizon:
+                elevation: 7
           then:
             - light.turn_on:
                 id: led_1
                 transition_length: 2s
-                brightness: 50%
+                brightness: 25%
     on_release:
       - light.turn_off:
           id: led_1
@@ -51,4 +52,20 @@ binary_sensor:
     id: motion_2
     name: MOTION 2
     pin: GPIO4
-
+    filters:
+      - delayed_off: 15s
+    on_press:
+      - if:
+          condition:
+            - sun.is_below_horizon:
+                elevation: 7
+          then:
+            - light.turn_on:
+                id: led_2
+                transition_length: 2s
+                brightness: 25%
+    on_release:
+      - light.turn_off:
+          id: led_2
+          transition_length: 8s
+ 

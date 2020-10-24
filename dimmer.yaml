@@ -1,0 +1,19 @@
+substitutions:
+  name: dimmer
+  platform: ESP8266
+  board: esp01_1m
+
+<<: !include defaults.yml
+
+uart:
+  rx_pin: GPIO01
+  tx_pin: GPIO03
+  baud_rate: 9600
+
+tuya:
+
+light:
+  - platform: tuya
+    name: Light
+    dimmer_datapoint: 3
+    switch_datapoint: 1
