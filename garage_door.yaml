@@ -12,20 +12,101 @@ switch:
     name: "Garage Door Switch"
     restore_mode: ALWAYS_OFF
     internal: true
-    
+
+# last_door_states are:
+# 0 = closed
+# 1 = open
+# 2 = opening
+# 3 = closing
+# 4 = error
+globals:
+  - id: last_door_state
+    type: int
+    restore_value: yes
+    initial_value: COVER_CLOSED
+
 binary_sensor:
-  - id: door_sensor
+  - id: door_open
+    internal: true
     platform: gpio
     pin: D8
+    name: "Garage Door Open"
+    filters:
+      - delayed_on: 1000ms
+      - delayed_off: 1000ms
+    on_state:
+      then:
+        - lambda: |-
+            if (id(door_open).state) {
+              id(garage_door).position = COVER_OPEN;
+              id(garage_door).current_operation = COVER_OPERATION_IDLE;
+              id(garage_door).publish_state();
+              id(last_door_state) = COVER_OPEN;
+
+            } else if (id(door_closed).state) {
+              id(garage_door).position = COVER_CLOSED;
+              id(garage_door).current_operation = COVER_OPERATION_IDLE;
+              id(garage_door).publish_state();
+              id(last_door_state) = COVER_CLOSED;
+
+            } else if (id(last_door_state) == COVER_CLOSED) {
+              id(garage_door).position = COVER_OPEN;
+              id(garage_door).current_operation = COVER_OPERATION_OPENING;
+              id(garage_door).publish_state();
+              id(last_door_state) = 2;
+
+            } else if (id(last_door_state) == COVER_OPEN) {
+              id(garage_door).position = COVER_OPEN;
+              id(garage_door).current_operation = COVER_OPERATION_CLOSING;
+              id(garage_door).publish_state();
+              id(last_door_state) = 3;
+
+            } else {
+              id(last_door_state) = 4;
+            }
+  - id: door_closed
+    internal: true
+    platform: gpio
+    pin: D7
     name: "Garage Door Closed"
     filters:
       - delayed_on: 1000ms
       - delayed_off: 1000ms
-    internal: true
+    on_state:
+      then:
+        - lambda: |-
+            if (id(door_open).state) {
+              id(garage_door).position = COVER_OPEN;
+              id(garage_door).current_operation = COVER_OPERATION_IDLE;
+              id(garage_door).publish_state();
+              id(last_door_state) = COVER_OPEN;
+
+            } else if (id(door_closed).state) {
+              id(garage_door).position = COVER_CLOSED;
+              id(garage_door).current_operation = COVER_OPERATION_IDLE;
+              id(garage_door).publish_state();
+              id(last_door_state) = COVER_CLOSED;
+
+            } else if (id(last_door_state) == COVER_CLOSED) {
+              id(garage_door).position = COVER_OPEN;
+              id(garage_door).current_operation = COVER_OPERATION_OPENING;
+              id(garage_door).publish_state();
+              id(last_door_state) = 2;
+
+            } else if (id(last_door_state) == COVER_OPEN) {
+              id(garage_door).position = COVER_OPEN;
+              id(garage_door).current_operation = COVER_OPERATION_CLOSING;
+              id(garage_door).publish_state();
+              id(last_door_state) = 3;
+
+            } else {
+              id(last_door_state) = 4;
+            }
 
 cover:
   - platform: template
     name: "Garage Door"
+    id: garage_door
     device_class: garage
     open_action:
       - switch.turn_on: door_switch
@@ -35,9 +116,3 @@ cover:
       - switch.turn_on: door_switch
       - delay: 0.1s
       - switch.turn_off: door_switch
-    lambda: |-
-      if (id(door_sensor).state) {
-        return COVER_CLOSED;
-      } else {
-        return COVER_OPEN;
-      }
