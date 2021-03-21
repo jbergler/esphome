@@ -1,5 +1,5 @@
 esphome:
-  name: ${name}
+  name: ${id}
   platform: ${platform}
   board: ${board}
   build_path: ./.build/${name}
@@ -28,18 +28,18 @@ sun:
 
 sensor:
   - platform: uptime
-    name: Device Uptime
+    name: ${name} Device Uptime
   - platform: wifi_signal
-    name: WiFi Signal
+    name: ${name} WiFi Signal
     update_interval: 60s
 
 text_sensor:
   - platform: wifi_info
     ip_address:
-      name: WiFi IP
+      name: ${name} WiFi IP
     ssid:
-      name: WiFi SSID
+      name: ${name} WiFi SSID
     bssid:
-      name: WiFi BSSID
+      name: ${name} WiFi BSSID
     mac_address:
-      name: WiFi MAC
+      name: ${name} WiFi MAC
