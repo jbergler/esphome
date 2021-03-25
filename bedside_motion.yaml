@@ -1,9 +1,11 @@
 substitutions:
-  name: bedside_motion
+  name: Under-bed Lights
+  id: bedside_motion
   platform: ESP8266
   board: d1_mini
 
-<<: !include defaults.yml
+packages:
+  base: !include defaults.yml
 
 output:
   - platform: esp8266_pwm
