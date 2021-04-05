@@ -1,0 +1,10 @@
+substitutions:
+  platform: ESP8266
+  board: d1_mini
+
+packages:
+  base: !include ../common/base.yaml
+  status: !include ../common/status.yaml
+
+status_led:
+  pin: D4

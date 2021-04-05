@@ -1,9 +1,9 @@
 substitutions:
-  name: garage_door
-  platform: ESP8266
-  board: d1_mini
+  hostname: garage_door
+  friendly_name: Garage Door
 
-<<: !include defaults.yml
+packages:
+  base: !include device/wemos_d1.yaml
 
 switch:
   - id: door_switch
