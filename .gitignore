@@ -6,4 +6,4 @@
 **/src/
 **/platformio.ini
 /secrets.yaml
-/.build/
+/build/

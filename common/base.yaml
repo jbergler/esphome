@@ -1,0 +1,29 @@
+esphome:
+  name: ${hostname}
+  board: ${board}
+  platform: ${platform}
+  build_path: ./build/${hostname}
+  arduino_version: recommended
+
+logger:
+  level: DEBUG
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: false
+  reboot_timeout: 300s
+  domain: !secret wifi_domain
+
+api:
+  reboot_timeout: 30min
+  password: !secret api_password
+
+ota:
+
+time:
+  - platform: homeassistant
+
+sun:
+  latitude: !secret lat
+  longitude: !secret lng

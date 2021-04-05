@@ -1,0 +1,38 @@
+sensor:
+  - platform: uptime
+    name: ${friendly_name} Device Uptime
+    id: device_uptime
+
+  - platform: wifi_signal
+    name: ${friendly_name} WiFi Signal
+    id: device_wifi_signal
+    update_interval: 60s
+
+binary_sensor:
+  - platform: status
+    name: ${friendly_name} Status
+    id: device_status
+
+text_sensor:
+  - platform: version
+    name: ${friendly_name} ESPHome Version
+    id: esphome_version
+
+  - platform: wifi_info
+    ip_address:
+      name: ${friendly_name} WiFi IP
+      id: ip_address
+    ssid:
+      name: ${friendly_name} WiFi SSID
+      id: ssid
+    bssid:
+      name: ${friendly_name} WiFi BSSID
+      id: bssid
+    mac_address:
+      name: ${friendly_name} WiFi MAC
+      id: mac
+
+switch:
+  - platform: restart
+    name: ${friendly_name} Restart
+    id: device_restart
