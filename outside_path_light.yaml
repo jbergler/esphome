@@ -1,0 +1,7 @@
+substitutions:
+  friendly_name: Path Light
+  hostname: outside_path_light
+  light_name: Path
+
+packages:
+  base: !include device/shelly_1pm_light.yaml
