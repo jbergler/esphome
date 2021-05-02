@@ -15,25 +15,25 @@ sensor:
     voltage:
       name: ${friendly_name} Voltage
     current_a:
-      name: ${channel_b} Current
-    current_b:
       name: ${channel_a} Current
+    current_b:
+      name: ${channel_b} Current
     active_power_a:
+      name: ${channel_a} Power
+      filters:
+        - multiply: 1
+    active_power_b:
       name: ${channel_b} Power
       filters:
         - multiply: -1
-    active_power_b:
-      name: ${channel_a} Power
-      filters:
-        - multiply: -1
-    update_interval: 15s
+    update_interval: 5s
 
   # NTC Temperature
   - platform: ntc
     sensor: temp_resistance_reading
-    name: ${friendly_name} Temperature
+    name: ${friendly_name} Internal Temperature
     unit_of_measurement: "°C"
-    accuracy_decimals: 1
+    accuracy_decimals: 0
     icon: "mdi:thermometer"
     calibration:
       b_constant: 3350
@@ -55,7 +55,9 @@ status_led:
 
 binary_sensor:
   - platform: gpio
-    pin: GPIO16
+    pin:
+      number: GPIO16
+      mode: INPUT_PULLUP
     name: "ade7953 IRQ pin"
     internal: true
   - platform: gpio
