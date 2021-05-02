@@ -1,8 +1,8 @@
 substitutions:
   friendly_name: Greenhouse Controller
   hostname: greenhouse_controller
-  channel_a: Lights
-  channel_b: Heater
+  channel_a: Greenhouse Lights
+  channel_b: Greenhouse Heater
 
 packages:
   base: !include device/shelly_2.5.yaml
