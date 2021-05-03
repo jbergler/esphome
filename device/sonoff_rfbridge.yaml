@@ -1,0 +1,82 @@
+substitutions:
+  platform: ESP8266
+  board: esp01_1m
+
+packages:
+  base: !include ../common/base.yaml
+  status: !include ../common/status.yaml
+
+# can't log to serial
+logger:
+  baud_rate: 0
+
+# setup uart for the rf microcontroller
+uart:
+  tx_pin: 1
+  rx_pin: 3
+  baud_rate: 19200
+
+api:
+  services:
+    - service: send_advanced_code
+      variables:
+        length: int
+        protocol: int
+        code: string
+      then:
+        - rf_bridge.send_advanced_code:
+            length: !lambda 'return length;'
+            protocol: !lambda 'return protocol;'
+            code: !lambda 'return code;'
+    - service: send_raw
+      variables:
+        code: string
+      then:
+        - rf_bridge.send_raw:
+            raw: !lambda 'return code;'
+    - service: start_learn
+      then:
+        - rf_bridge.learn
+    - service: start_advanced_sniffing
+      then:
+        - rf_bridge.start_advanced_sniffing
+    - service: stop_advanced_sniffing
+      then:
+        - rf_bridge.stop_advanced_sniffing
+
+binary_sensor:
+  - name: learn_button
+    platform: gpio
+    pin:
+      number: GPIO0
+      inverted: true
+    on_press:
+      then:
+        - rf_bridge.start_advanced_sniffing
+    on_release:
+      then:
+        - rf_bridge.stop_advanced_sniffing
+    filters:
+      delayed_off: 30s
+
+rf_bridge:
+  on_code_received:
+    - homeassistant.event:
+        event: esphome.rf_code_received
+        data:
+          sync: !lambda 'char buffer [10];return itoa(data.sync,buffer,16);'
+          low: !lambda 'char buffer [10];return itoa(data.low,buffer,16);'
+          high: !lambda 'char buffer [10];return itoa(data.high,buffer,16);'
+          code: !lambda 'char buffer [10];return itoa(data.code,buffer,16);'
+  on_advanced_code_received:
+    - homeassistant.event:
+        event: esphome.rf_advanced_code_received
+        data:
+          length: !lambda 'char buffer [10];return itoa(data.length,buffer,16);'
+          protocol: !lambda 'char buffer [10];return itoa(data.protocol,buffer,16);'
+          code: !lambda 'return data.code;'
+
+status_led:
+  pin:
+    number: GPIO13
+    inverted: yes

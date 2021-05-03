@@ -1,0 +1,9 @@
+substitutions:
+  hostname: rfbridge
+  friendly_name: RF Bridge
+
+packages:
+  base: !include device/sonoff_rfbridge.yaml
+
+web_server:
+  port: 80
