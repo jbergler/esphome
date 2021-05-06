@@ -1,16 +1,16 @@
 substitutions:
-  name: Arc Lamp
-  id: arc_lamp
+  hostname: arc_lamp
+  friendly_name: Arc Lamp
   platform: ESP8266
   board: esp01_1m
 
 packages:
-  base: !include defaults.yml
+  base: !include device/generic.yaml
 
 logger:
   # Disable logging to serial
   baud_rate: 0
-
+ 
 esphome:
   on_boot:
     priority: 300
@@ -18,7 +18,8 @@ esphome:
       - light.turn_on:
           id: bulb
           transition_length: 0s
-          color_temperature: 350 mireds
+          brightness: 60%
+          color_temperature: 357 mireds
 
 output:
   - platform: esp8266_pwm
@@ -40,7 +41,7 @@ output:
 light:
   - platform: rgbww
     id: bulb
-    name: ${name}
+    name: ${friendly_name}
     red: output_red
     green: output_green
     blue: output_blue
@@ -50,3 +51,4 @@ light:
     cold_white_color_temperature: 6200 K
     restore_mode: RESTORE_DEFAULT_ON
     color_interlock: true
+
