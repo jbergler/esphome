@@ -1,11 +1,9 @@
 substitutions:
-  name: Under-bed Lights
-  id: bedside_motion
-  platform: ESP8266
-  board: d1_mini
+  hostname: bedside_motion
+  friendly_name: Under-bed Lights
 
 packages:
-  base: !include defaults.yml
+  base: !include device/wemos_d1.yaml
 
 output:
   - platform: esp8266_pwm
@@ -19,12 +17,10 @@ light:
   - platform: monochromatic
     id: led_1
     output: led_1_pin
-    name: "LED 1"
     restore_mode: ALWAYS_OFF
   - platform: monochromatic
     id: led_2
     output: led_2_pin
-    name: "LED 2"
     restore_mode: ALWAYS_OFF
 
 binary_sensor:
