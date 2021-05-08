@@ -1,0 +1,43 @@
+substitutions:
+  platform: ESP8266
+  board: esp01_1m
+
+packages:
+  base: !include ../common/base.yaml
+  status: !include ../common/status.yaml
+
+logger:
+  # Disable logging to serial
+  baud_rate: 0
+
+output:
+  - platform: esp8266_pwm
+    id: output_red
+    pin: GPIO4
+  - platform: esp8266_pwm
+    id: output_green
+    pin: GPIO12
+  - platform: esp8266_pwm
+    id: output_blue
+    pin: GPIO14
+  - platform: esp8266_pwm
+    id: output_warm_white
+    pin: GPIO13
+  - platform: esp8266_pwm
+    id: output_cold_white
+    pin: GPIO5
+
+light:
+  - platform: rgbww
+    id: bulb
+    name: ${light_name}
+    red: output_red
+    green: output_green
+    blue: output_blue
+    warm_white: output_warm_white
+    cold_white: output_cold_white
+    warm_white_color_temperature: 2800 K
+    cold_white_color_temperature: 6200 K
+    restore_mode: RESTORE_DEFAULT_OFF
+    color_interlock: true
+

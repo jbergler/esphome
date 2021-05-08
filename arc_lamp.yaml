@@ -1,54 +1,17 @@
 substitutions:
-  hostname: arc_lamp
   friendly_name: Arc Lamp
-  platform: ESP8266
-  board: esp01_1m
+  hostname: arc_lamp
+  light_name: Arc Lamp
 
 packages:
-  base: !include device/generic.yaml
-
-logger:
-  # Disable logging to serial
-  baud_rate: 0
+  base: !include device/arlec_GLD122HA.yaml
  
-esphome:
-  on_boot:
-    priority: 300
-    then:
-      - light.turn_on:
-          id: bulb
-          transition_length: 0s
-          brightness: 60%
-          color_temperature: 357 mireds
-
-output:
-  - platform: esp8266_pwm
-    id: output_red
-    pin: GPIO4
-  - platform: esp8266_pwm
-    id: output_green
-    pin: GPIO12
-  - platform: esp8266_pwm
-    id: output_blue
-    pin: GPIO14
-  - platform: esp8266_pwm
-    id: output_warm_white
-    pin: GPIO13
-  - platform: esp8266_pwm
-    id: output_cold_white
-    pin: GPIO5
-
-light:
-  - platform: rgbww
-    id: bulb
-    name: ${friendly_name}
-    red: output_red
-    green: output_green
-    blue: output_blue
-    warm_white: output_warm_white
-    cold_white: output_cold_white
-    warm_white_color_temperature: 2800 K
-    cold_white_color_temperature: 6200 K
-    restore_mode: RESTORE_DEFAULT_ON
-    color_interlock: true
-
+# esphome:
+#   on_boot:
+#     priority: 300
+#     then:
+#       - light.turn_on:
+#           id: bulb
+#           transition_length: 0s
+#           brightness: 60%
+#           color_temperature: 357 mireds
