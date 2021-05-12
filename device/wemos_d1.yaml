@@ -7,4 +7,6 @@ packages:
   status: !include ../common/status.yaml
 
 status_led:
-  pin: D4
+  pin:
+    number: D4
+    inverted: true
