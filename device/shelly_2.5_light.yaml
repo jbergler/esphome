@@ -1,0 +1,94 @@
+substitutions:
+  platform: ESP8266
+  board: esp01_1m
+
+packages:
+  base: !include ../common/base.yaml
+  status: !include ../common/status.yaml
+
+i2c:
+  sda: GPIO12
+  scl: GPIO14
+
+sensor:
+  - platform: ade7953
+    voltage:
+      name: ${friendly_name} Voltage
+    current_a:
+      name: ${channel_a} Current
+    current_b:
+      name: ${channel_b} Current
+    active_power_a:
+      name: ${channel_a} Power
+      filters:
+        - multiply: 1
+    active_power_b:
+      name: ${channel_b} Power
+      filters:
+        - multiply: -1
+    update_interval: 5s
+
+  # NTC Temperature
+  - platform: ntc
+    sensor: temp_resistance_reading
+    name: ${friendly_name} Internal Temperature
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+    icon: "mdi:thermometer"
+    calibration:
+      b_constant: 3350
+      reference_resistance: 10kOhm
+      reference_temperature: 298.15K
+  - platform: resistance
+    id: temp_resistance_reading
+    sensor: temp_analog_reading
+    configuration: DOWNSTREAM
+    resistor: 32kOhm
+  - platform: adc
+    id: temp_analog_reading
+    pin: A0
+
+status_led:
+  pin:
+    number: GPIO0
+    inverted: yes
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO16
+      mode: INPUT_PULLUP
+    name: "ade7953 IRQ pin"
+    internal: true
+  - platform: gpio
+    pin:
+      number: GPIO13
+    name: "${channel_a} Switch"
+    on_state:
+      then:
+        - light.toggle: bulb_a
+  - platform: gpio
+    pin:
+      number: GPIO5
+    name: "${channel_b} Switch"
+    on_state:
+      then:
+        - light.toggle: bulb_b
+
+light:
+  - platform: binary
+    name: "${channel_a}"
+    id: bulb_a
+    output: relay_a
+  - platform: binary
+    name: "${channel_b}"
+    id: bulb_b
+    output: relay_b
+
+output:
+  - platform: gpio
+    id: relay_a
+    pin: GPIO15
+  - platform: gpio
+    id: relay_b
+    pin: GPIO4

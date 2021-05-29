@@ -1,0 +1,8 @@
+substitutions:
+  friendly_name: Kitchen Light
+  hostname: kitchen_light2
+  channel_a: Kitchen Bar
+  channel_b: Coffee Station
+
+packages:
+  base: !include device/shelly_2.5_light.yaml
