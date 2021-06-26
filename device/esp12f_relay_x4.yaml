@@ -1,0 +1,39 @@
+substitutions:
+  platform: ESP8266
+  board: esp12e
+
+packages:
+  base: !include ../common/base.yaml
+  status: !include ../common/status.yaml
+
+sensor:
+status_led:
+  pin:
+    number: GPIO5
+    inverted: yes
+
+switch:
+  - platform: gpio
+    id: shelly_relay_a
+    name: "${channel_a} Relay"
+    pin: GPIO16
+    icon: "mdi:electric-switch"
+    restore_mode: RESTORE_DEFAULT_OFF
+  - platform: gpio
+    id: shelly_relay_b
+    name: "${channel_b} Relay"
+    pin: GPIO14
+    icon: "mdi:electric-switch"
+    restore_mode: RESTORE_DEFAULT_OFF
+  - platform: gpio
+    id: shelly_relay_c
+    name: "${channel_c} Relay"
+    pin: GPIO12
+    icon: "mdi:electric-switch"
+    restore_mode: RESTORE_DEFAULT_OFF
+  - platform: gpio
+    id: shelly_relay_d
+    name: "${channel_d} Relay"
+    pin: GPIO13
+    icon: "mdi:electric-switch"
+    restore_mode: RESTORE_DEFAULT_OFF
