@@ -1,11 +1,12 @@
 substitutions:
-  name: Bedside Lamp
-  id: bedside_lamp
+  friendly_name: Bedside Lamp
+  hostname: bedside_lamp
+  light_name: Jonas Bedside
   platform: ESP8266
   board: esp01_1m
 
 packages:
-  base: !include defaults.yml
+  base: !include device/generic.yaml
 
 logger:
   # Disable logging to serial
@@ -18,5 +19,5 @@ output:
 
 light:
   - platform: monochromatic
-    name: "Bulb"
+    name: "${light_name}"
     output: light_pwm
