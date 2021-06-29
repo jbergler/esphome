@@ -1,8 +1,18 @@
 substitutions:
   friendly_name: Greenhouse Controller
   hostname: greenhouse_controller
-  channel_a: Greenhouse Lights
+  channel_a: TBD
   channel_b: Greenhouse Heater
+  channel_c: Greenhouse Lights
+  channel_d: Greenhouse Fan
 
 packages:
-  base: !include device/shelly_2.5.yaml
+  base: !include device/esp12f_relay_x4.yaml
+
+dallas:
+  - pin: GPIO5
+
+sensor:
+  - platform: dallas
+    address: 0xD903079779B94528
+    name: Greenhouse Temperature

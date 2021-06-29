@@ -31,6 +31,7 @@ switch:
     pin: GPIO12
     icon: "mdi:electric-switch"
     restore_mode: RESTORE_DEFAULT_OFF
+    inverted: true
   - platform: gpio
     id: shelly_relay_d
     name: "${channel_d} Relay"
