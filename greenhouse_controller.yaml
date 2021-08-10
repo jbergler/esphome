@@ -1,8 +1,8 @@
 substitutions:
   friendly_name: Greenhouse Controller
   hostname: greenhouse_controller
-  channel_a: TBD
-  channel_b: Greenhouse Heater
+  channel_a: Greenhouse Fountain
+  channel_b: TBD
   channel_c: Greenhouse Lights
   channel_d: Greenhouse Fan
 
@@ -18,27 +18,12 @@ sensor:
     id: temp_probe
     address: 0xD903079779B94528
     name: Greenhouse Temperature
-
-climate:
-  - platform: thermostat
-    name: Greenhouse Thermostat
-    id: greenhouse_thermostat
-    visual:
-      min_temperature: 16 °C
-      max_temperature: 24 °C
-      temperature_step: 0.5 °C
-    sensor: temp_probe
-    default_target_temperature_low: 19 °C
-    heat_action:
-      - switch.turn_on: relay_b
-    idle_action:
-      - switch.turn_off: relay_b
-
-esphome:
-  on_boot:
-    priority: 500
-    then:
-      - climate.control:
-          id: greenhouse_thermostat
-          mode: HEAT
-          target_temperature: 19 °C
+  - platform: dht
+    pin: GPIO4
+    temperature:
+      name: Greenhouse Temperature (DHT)
+      id: dht_temp
+    humidity:
+      name: Greenhouse Humidity
+      id: dht_humidity
+    update_interval: 20s
