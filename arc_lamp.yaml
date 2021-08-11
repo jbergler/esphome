@@ -6,12 +6,16 @@ substitutions:
 packages:
   base: !include device/arlec_GLD122HA.yaml
  
-# esphome:
-#   on_boot:
-#     priority: 300
-#     then:
-#       - light.turn_on:
-#           id: bulb
-#           transition_length: 0s
-#           brightness: 60%
-#           color_temperature: 357 mireds
+esphome:
+  on_boot:
+    priority: 300
+    then:
+      - if:
+          condition:
+            - light.is_off: bulb
+          then:
+            - light.control:
+                id: bulb
+                state: false
+                brightness: 50 %
+                color_temperature: 357 mireds
