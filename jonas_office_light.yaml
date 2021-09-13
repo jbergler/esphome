@@ -1,0 +1,7 @@
+substitutions:
+  friendly_name: Jonas Office Light
+  hostname: jonas_office_light
+  light_name: Jonas Office
+
+packages:
+  base: !include device/athom_15W.yaml
