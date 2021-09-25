@@ -1,10 +1,10 @@
 substitutions:
   friendly_name: Greenhouse Controller
   hostname: greenhouse_controller
-  channel_a: Greenhouse Fountain
-  channel_b: TBD
-  channel_c: Greenhouse Lights
-  channel_d: Greenhouse Fan
+  channel_a: Greenhouse Lights
+  channel_b: Greenhouse Humidifier
+  channel_c: Greenhouse Fountain
+  channel_d: TBD
 
 packages:
   base: !include device/esp12f_relay_x4.yaml
@@ -18,12 +18,13 @@ sensor:
     id: temp_probe
     address: 0xD903079779B94528
     name: Greenhouse Temperature
-  - platform: dht
-    pin: GPIO4
-    temperature:
-      name: Greenhouse Temperature (DHT)
-      id: dht_temp
-    humidity:
-      name: Greenhouse Humidity
-      id: dht_humidity
-    update_interval: 20s
+  #- platform: dht
+  #  pin: GPIO5
+  #  model: AM2302
+  #  temperature:
+  #    name: Greenhouse Temperature
+  #    id: dht_temp
+  #  humidity:
+  #    name: Greenhouse Humidity
+  #    id: dht_humidity
+  #  update_interval: 20s
