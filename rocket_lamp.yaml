@@ -1,0 +1,7 @@
+substitutions:
+  friendly_name: Rocket Lamp
+  hostname: rocket_lamp
+  light_name: Rocket Lamp
+
+packages:
+  base: !include device/athom_15W.yaml

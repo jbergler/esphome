@@ -1,0 +1,21 @@
+substitutions:
+  friendly_name: Dining Table Light
+  hostname: dining_table_light
+  light_name: Dining Table
+
+packages:
+  base: !include device/athom_15W.yaml
+
+esphome:
+  on_boot:
+    priority: 300
+    then:
+      - if:
+          condition:
+            - light.is_off: bulb
+          then:
+            - light.control:
+                id: bulb
+                state: true
+                brightness: 80 %
+                color_temperature: 500 mireds
