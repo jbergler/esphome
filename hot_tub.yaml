@@ -1,0 +1,6 @@
+substitutions:
+  friendly_name: Hot Tub
+  hostname: hot_tub
+
+packages:
+  base: !include device/shelly_1pm_switch.yaml

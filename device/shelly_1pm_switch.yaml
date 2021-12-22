@@ -27,7 +27,7 @@ sensor:
     sel_pin: GPIO14 # not used because it is not available on the 1PM but it is needed to compile
     power:
       name: "${friendly_name} Power"
-      unit_of_measurement: W
+      unit_of_measurement: kW
       id: "${hostname}_power"
       icon: mdi:flash-circle
       accuracy_decimals: 0
@@ -40,8 +40,13 @@ sensor:
           - 2663.0 -> 444.0
           - 8600.0 -> 1390.0
       - lambda: if (x <= 6.0) return 0; else return (x - 6);
+      - multiply: 0.001 # W -> kW
     update_interval: 10s
-    
+
+  - platform: total_daily_energy
+    name: "Total Daily Energy"
+    power_id: "${hostname}_power"
+
   # NTC Temperature
   - platform: ntc
     sensor: ${hostname}_resistance_sensor
