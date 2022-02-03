@@ -1,0 +1,10 @@
+substitutions:
+  friendly_name: Garage Lights
+  hostname: garage_lights
+  left_name: Garage Light
+  right_name: Driveway Sensor Light
+  right_restore_mode: ALWAYS_ON
+
+packages:
+  base: !include device/sonoff_nspanel.yaml
+

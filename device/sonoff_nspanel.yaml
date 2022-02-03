@@ -1,0 +1,66 @@
+substitutions:
+  platform: ESP32
+  board: esp32dev
+  left_name: Channel 1
+  left_restore_mode: ALWAYS_OFF
+  right_name: Channel 2
+  right_restore_mode: ALWAYS_OFF
+
+packages:
+  base: !include ../common/base.yaml
+  status: !include ../common/status.yaml
+
+external_components:
+  - source: github://pr#2956
+    components: [nextion]
+    refresh: 12h
+
+# Configure UART for communicating with the screen
+uart:
+  id: tf_uart
+  tx_pin: 16
+  rx_pin: 17
+  baud_rate: 115200
+
+# status_led:
+#   pin:
+#     number: D4
+#     inverted: true
+
+binary_sensor:
+  - platform: gpio
+    name: ${friendly_name} ${left_name}
+    pin:
+      number: 14
+      inverted: true
+    on_click:
+      - switch.toggle: relay_1
+  - platform: gpio
+    name: ${friendly_name} ${right_name}
+    pin:
+      number: 27
+      inverted: true
+    on_click:
+      - switch.toggle: relay_1
+
+switch:
+  - platform: gpio
+    name: ${friendly_name} ${left_name} Relay
+    id: relay_1
+    pin:
+      number: 22
+    restore_mode: ${left_restore_mode}
+  - platform: gpio
+    name: ${friendly_name} ${right_name} Relay
+    id: relay_2
+    pin:
+      number: 19
+    restore_mode: ${right_restore_mode}
+  - platform: gpio
+    id: screen_power
+    internal: true
+    entity_category: config
+    pin:
+      number: 4
+      inverted: true
+    restore_mode: ALWAYS_ON  # Pin 4 always needs to be on to power up the display
