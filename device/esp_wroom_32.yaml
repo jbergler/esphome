@@ -1,0 +1,12 @@
+substitutions:
+  platform: ESP32
+  board: nodemcu-32s
+
+packages:
+  base: !include ../common/base.yaml
+  status: !include ../common/status.yaml
+
+status_led:
+  pin:
+    number: GPIO2
+    inverted: true

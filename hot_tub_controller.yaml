@@ -1,0 +1,72 @@
+substitutions:
+  friendly_name: Hot Tub Controller
+  hostname: hot_tub_controller
+
+packages:
+  base: !include device/esp_wroom_32.yaml
+
+external_components:
+  - source:
+      type: local
+      path: /Users/jbergler/co/esphome.src/esphome/components/
+    components: [ binary_sensor, spanet ]
+
+uart:
+  tx_pin: GPIO16
+  rx_pin: GPIO17
+  baud_rate: 38400
+  debug:
+    direction: BOTH
+    # dummy_receiver: false
+    after:
+      delimiter: "\n"
+    sequence:
+      - lambda: UARTDebug::log_string(direction, bytes);
+        
+spanet:
+  id: spanet_uart
+
+climate:
+  - platform: spanet
+    name: ${friendly_name} Heater
+
+select:
+  - platform: spanet
+    spanet_id: spanet_uart
+    lock_mode:
+      name: Lock Mode
+      entity_category: config
+    power_save_mode:
+      name: Power Save
+      entity_category: config
+    operating_mode:
+      name: Operating Mode
+      entity_category: config
+
+binary_sensor:
+  - platform: spanet
+    spanet_id: spanet_uart
+    cleaning_uv_ozone:
+      name: Ozonator
+    cleaning_sanitise:
+      name: Sanitising
+    lights:
+      name: Lights
+    auto:
+      name: Auto
+    sleeping:
+      name: Sleeping
+
+#sensor:
+#  - platform: spanet
+#    water_temperature:
+#      name: Water Temperature
+#      accuracy_decimals: 1
+#    set_temperature:
+#      name: Set Temperature
+#      accuracy_decimals: 1
+#
+#binary_sensor:
+#  - platform: spanet
+#    heating:
+#      name: "Heating"
