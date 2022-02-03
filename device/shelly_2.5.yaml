@@ -55,9 +55,7 @@ status_led:
 
 binary_sensor:
   - platform: gpio
-    pin:
-      number: GPIO16
-      mode: INPUT_PULLUP
+    pin: GPIO16
     name: "ade7953 IRQ pin"
     internal: true
   - platform: gpio

@@ -5,3 +5,17 @@ substitutions:
 
 packages:
   base: !include device/athom_15W.yaml
+
+esphome:
+  on_boot:
+    priority: 300
+    then:
+      - if:
+          condition:
+            - light.is_off: bulb
+          then:
+            - light.control:
+                id: bulb
+                state: true
+                brightness: 100 %
+                color_temperature: 500 mireds

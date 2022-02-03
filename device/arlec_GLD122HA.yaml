@@ -39,5 +39,4 @@ light:
     warm_white_color_temperature: 2800 K
     cold_white_color_temperature: 6200 K
     restore_mode: RESTORE_DEFAULT_OFF
-    color_interlock: true
-
+    color_interlock: false
