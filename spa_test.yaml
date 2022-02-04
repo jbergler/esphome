@@ -1,0 +1,42 @@
+substitutions:
+  friendly_name: spa test
+  hostname: spa_test
+
+esphome:
+  name: ${hostname}
+  build_path: ./build/${hostname}
+  platformio_options:
+    upload_speed: 115200
+    board_build.flash_mode: dio
+    # board_build.partitions: partitions_singleapp.csv
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+logger:
+  level: DEBUG
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: false
+  reboot_timeout: 300s
+  domain: !secret wifi_domain
+
+api:
+  reboot_timeout: 30min
+  password: !secret api_password
+
+ota:
+
+time:
+  - platform: homeassistant
+
+sun:
+  latitude: !secret lat
+  longitude: !secret lng
+
+packages:
+  status: !include ./common/status.yaml
