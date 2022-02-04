@@ -6,17 +6,25 @@ esphome:
   name: ${hostname}
   build_path: ./build/${hostname}
   platformio_options:
-    upload_speed: 115200
+    # upload_speed: 115200
     board_build.flash_mode: dio
-    # board_build.partitions: partitions_singleapp.csv
 
 esp32:
   board: esp32-c3-devkitm-1
   framework:
     type: esp-idf
+    version: latest
+    sdkconfig_options:
+      #CONFIG_ESP_CONSOLE_USB_CDC: y
+      CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG: y
+
+external_components:
+  - source: github://pr#3105
+    components: [ logger ]
 
 logger:
-  level: DEBUG
+  level: VERY_VERBOSE
+  hardware_uart: STDOUT
 
 wifi:
   ssid: !secret wifi_ssid
