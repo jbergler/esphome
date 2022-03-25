@@ -1,0 +1,8 @@
+substitutions:
+  friendly_name: Driveway Lights
+  hostname: driveway_lights
+  channel_a: Path
+  channel_b: Driveway
+
+packages:
+  base: !include device/shelly_2.5_light.yaml
