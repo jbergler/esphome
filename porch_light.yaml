@@ -4,4 +4,4 @@ substitutions:
   light_name: Porch
 
 packages:
-  base: !include device/shelly_1pm_light.yaml
+  base: !include device/sonoff_mini_r2.yaml

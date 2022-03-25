@@ -1,0 +1,60 @@
+substitutions:
+  platform: ESP8266
+  board: esp8285
+
+packages:
+  base: !include ../common/base.yaml
+  status: !include ../common/status.yaml
+
+status_led:
+  pin:
+    number: GPIO13
+    inverted: true
+
+output:
+  - platform: gpio
+    pin: GPIO12
+    id: relay  
+  - platform: esp8266_pwm
+    id: blue_led
+    pin: GPIO13
+    inverted: true
+
+light:
+  - platform: binary
+    name: "${light_name}"
+    id: bulb
+    output: relay
+  - platform: monochromatic
+    name: ${device_name}_blueled
+    output: blue_led
+    internal: true
+
+binary_sensor:
+  # the 7 lines below define the reset button
+  - platform: gpio
+    pin: GPIO00
+    id: reset
+    internal: true
+    filters:
+      - invert:
+      - delayed_off: 10ms
+  # the 3 lines below toggle the main relay on press of reset button
+    on_press:
+      - light.toggle:
+          id: bulb
+
+  # the 13 lines below toggle the main relay on command
+  - platform: gpio
+    name: relay_toggle
+    internal: true
+    pin: GPIO04
+    id: gpio_light_id
+    on_press:
+      then:
+        - light.toggle:
+            id: bulb
+    on_release:
+      then:
+        - light.toggle:
+            id: bulb
