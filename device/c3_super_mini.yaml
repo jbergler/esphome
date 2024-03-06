@@ -1,0 +1,12 @@
+substitutions:
+  platform: ESP32
+  board: esp32-c3-devkitm-1
+
+packages:
+  base: !include ../common/base.yaml
+  status: !include ../common/status.yaml
+
+# status_led:
+#   pin:
+#     number: 8
+#     inverted: true

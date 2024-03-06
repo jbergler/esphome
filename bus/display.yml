@@ -1,0 +1,190 @@
+external_components:
+  - source:
+      type: local
+      path: ~/co/esphome.src/esphome/components
+    components: [ waveshare_epaper ]
+  - source: github://tfyoung/esphome-junctek_kgf
+    components: [junctek_kgf]
+
+substitutions:
+  hostname: bus-display
+  friendly_name: Bus Display
+
+packages:
+  base: !include ../device/c3_super_mini.yaml
+
+
+api:
+  reboot_timeout: !remove
+wifi:
+  reboot_timeout: !remove
+  ap:
+    ssid: bus-sensor
+    password: pineapple
+    ap_timeout: 60s
+
+web_server:
+  port: 80
+  ota: false
+  js_url: https://attilafarago.hu/smarthome/esphome_web_server/www.js
+
+esphome:
+  includes:
+    - display.h
+    - display.cpp
+  on_boot:
+    then:
+      - delay: 30s
+      - component.update: screen
+
+# logger:
+#   level: verbose
+esp32_ble_tracker:
+
+mopeka_ble:
+
+uart:
+  - id: rs485
+    rx_pin: GPIO20
+    tx_pin: GPIO21
+    baud_rate: 115200
+
+spi:
+  - id: spi0
+    mosi_pin: GPIO06  # aka SDA
+    clk_pin: GPIO04  #aka SCL
+
+font:
+  - id: small
+    file:
+      type: gfonts
+      family: Roboto
+      weight: 400
+    size: 12
+
+  - id: large
+    file:
+      type: gfonts
+      family: Roboto
+      weight: 500
+    size: 32
+
+  - id: icons
+    file:
+      type: gfonts
+      family: Material Symbols Outlined
+      weight: 400
+    size: 32
+    glyphs:
+      - "\U0000e798" # water
+      - "\U0000e278" # faucet
+      - "\U0000e1a3" # battery
+      - "\U0000ea0b" # bolt
+      - "\U0000ec13" # tank
+
+qr_code:
+  - id: wifi_qr
+    value: "WIFI:S:matilda;T:WPA;P:Bitch, I'm a Bus!;;"
+
+globals:
+  - id: water_level
+    type: float
+    restore_value: yes
+    initial_value: '0.0'
+  - id: battery_level
+    type: float
+    restore_value: yes
+    initial_value: '0.0'
+  - id: lpg_level
+    type: float
+    restore_value: yes
+    initial_value: '0.0'
+
+sensor:
+  - platform: adc
+    id: adc_water_tank
+    pin: GPIO00
+    attenuation: 11db
+    update_interval: 10s
+    internal: true
+
+  - platform: resistance
+    id: r_water_tank
+    sensor: adc_water_tank
+    configuration: DOWNSTREAM
+    resistor: 100Ohm
+    name: Water Tank Level
+    unit_of_measurement: "%"
+    device_class: BATTERY
+    accuracy_decimals: 0
+    filters:
+      - clamp:
+          min_value: 0
+          max_value: 190
+      - calibrate_linear:
+          datapoints:
+            - 0.0 -> 0.0
+            - 190.0 -> 100.0
+    on_value: 
+      then:
+        lambda: id(water_level) = x / 100;
+
+  - platform: junctek_kgf
+    address: 1
+    invert_current: true
+    voltage:
+      name: "Battery Voltage"
+      id: battery_voltage
+    current:
+      name: "Battery Current"
+    battery_level:
+      name: "Battery Level"
+      on_value:
+        then:
+          lambda: id(battery_level) = x / 100;
+    temperature:
+      name: "Battery Temperature"
+
+color:
+  - id: COLOR_RED
+    red: 100%
+    green: 0%
+    blue: 0%
+    white: 0%
+
+graph:
+  # Show bare-minimum auto-ranged graph
+  - id: graph_v
+    sensor: battery_voltage
+    duration: 3h
+    width: 165
+    height: 40
+ 
+display:
+  - id: screen
+    platform: waveshare_epaper
+    setup_priority: 275 # just before wifi
+    model: 2.90in3c # 2.90inBS
+    cs_pin: GPIO07
+    dc_pin: GPIO01
+    reset_pin: GPIO02
+    reset_duration: 2ms
+    busy_pin: GPIO03
+    rotation: 270
+    #full_update_every: 6
+    update_interval: 900s # 15m
+    lambda: |-
+      #define DRAW_BAR(pos, icon, value) draw_bar(it, pos, icon, value, id(icons), id(small))
+      
+      it.fill(COLOR_RED);
+      it.fill(COLOR_OFF);
+
+      DRAW_BAR(0, "\U0000e798", id(water_level));
+      DRAW_BAR(1, "\U0000ea0b", id(battery_level));
+      DRAW_BAR(2, "\U0000ec13", id(lpg_level));
+
+      it.qr_code(296 - 30, 128 - 30, id(wifi_qr));
+
+      it.printf(120, 0, id(small), COLOR_ON, "Voltage: %.02f V", id(battery_voltage).state);
+      it.graph(120, 16, id(graph_v));
+      // it.print(128, 40, id(large), COLOR_RED, "Red Text");

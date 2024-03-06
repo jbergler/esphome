@@ -17,8 +17,9 @@ wifi:
 
 api:
   reboot_timeout: 30min
-  password: !secret api_password
-
+  #password: !secret api_password
+  encryption:
+    key: !secret api_key
 ota:
 
 time:

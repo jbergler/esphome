@@ -1,0 +1,84 @@
+substitutions:
+  hostname: coop
+  friendly_name: Chicken Coop
+
+packages:
+  base: !include device/wemos_s2.yaml
+
+switch:
+  - id: open_door_switch
+    platform: gpio
+    pin: GPIO3 # IN-1
+    restore_mode: ALWAYS_OFF
+    internal: true
+  - id: close_door_switch
+    platform: gpio
+    pin: GPIO5 # IN-2
+    restore_mode: ALWAYS_OFF
+    internal: true
+  - id: light_switch
+    platform: gpio
+    pin: GPIO7 # IN-3
+    restore_mode: ALWAYS_OFF
+    internal: true
+
+binary_sensor:
+  - id: close_endstop
+    internal: true
+    platform: gpio
+    pin:
+      number: GPIO11 # Yellow
+      mode:
+        input: true
+        pullup: true
+    filters:
+      - delayed_on: 5ms
+      - delayed_off: 50ms
+  - id: open_endstop
+    internal: true
+    platform: gpio
+    pin: 
+      number: GPIO12 # Green
+      mode:
+        input: true
+        pullup: true
+    filters:
+      - delayed_on: 5ms
+      - delayed_off: 50ms
+  - id: button
+    internal: true
+    platform: gpio
+    pin:
+      number: GPIO9 # White
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    filters:
+      - delayed_on: 25ms
+    on_press:
+      then:
+        - cover.toggle: door
+
+cover:
+  - platform: feedback
+    name: Chicken Coop Door
+    id: door
+    device_class: door
+    direction_change_wait_time: 1s
+    assumed_state: false
+
+    open_action:
+      - switch.turn_on: open_door_switch
+    open_duration: 12s
+    open_endstop: open_endstop
+
+    close_action:
+      - switch.turn_on: close_door_switch
+    close_duration: 12s
+    close_endstop: close_endstop
+
+    max_duration: 13s
+    stop_action:
+      - switch.turn_off: open_door_switch
+      - switch.turn_off: close_door_switch

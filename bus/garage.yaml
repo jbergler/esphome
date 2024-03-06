@@ -1,0 +1,33 @@
+substitutions:
+  hostname: garage_esp
+  friendly_name: Garage ESP
+
+packages:
+  base: !include ../device/wemos_s2.yaml
+
+sensor:
+  - platform: adc
+    id: adc_water_tank
+    pin: 3
+    attenuation: 11db
+    update_interval: 10s
+    internal: true
+
+  - platform: resistance
+    id: r_water_tank
+    sensor: adc_water_tank
+    configuration: DOWNSTREAM
+    resistor: 100Ohm
+    name: Water Tank Level
+    unit_of_measurement: "%"
+    device_class: BATTERY
+    accuracy_decimals: 0
+    filters:
+      - clamp:
+          min_value: 0
+          max_value: 190
+      - calibrate_linear:
+          datapoints:
+            - 0.0 -> 0.0
+            - 190.0 -> 100.0
+
