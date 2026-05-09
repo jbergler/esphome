@@ -1,7 +1,8 @@
 # Athom 15W RGBCT Light
-substitutions:
-  platform: ESP8266
+esp8266:
   board: esp8285
+  framework:
+    version: recommended
 
 packages:
   base: !include ../common/base.yaml

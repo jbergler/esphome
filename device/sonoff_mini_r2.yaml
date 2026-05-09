@@ -1,6 +1,7 @@
-substitutions:
-  platform: ESP8266
+esp8266:
   board: esp8285
+  framework:
+    version: recommended
 
 packages:
   base: !include ../common/base.yaml
@@ -15,20 +16,12 @@ output:
   - platform: gpio
     pin: GPIO12
     id: relay  
-  - platform: esp8266_pwm
-    id: blue_led
-    pin: GPIO13
-    inverted: true
 
 light:
   - platform: binary
     name: "${light_name}"
     id: bulb
     output: relay
-  - platform: monochromatic
-    name: ${device_name}_blueled
-    output: blue_led
-    internal: true
 
 binary_sensor:
   # the 7 lines below define the reset button
