@@ -10,6 +10,7 @@ wifi:
   password: !secret wifi_password
   fast_connect: false
   reboot_timeout: 300s
+  min_auth_mode: WPA2
   # domain: !secret wifi_domain
 
 api:
@@ -19,7 +20,7 @@ api:
     key: !secret api_key
 
 ota:
-  platform: esphome
+  - platform: esphome
 
 time:
   - platform: homeassistant

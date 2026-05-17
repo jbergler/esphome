@@ -1,0 +1,21 @@
+substitutions:
+  friendly_name: Driveway Sensor
+  hostname: driveway_sensor
+
+packages:
+  base: !include device/esp32_poe.yaml
+
+bluetooth_proxy:
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO14
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    filters:
+      - delayed_on: 0ms
+      - delayed_off: 250ms
+    name: Gate
