@@ -1,7 +1,0 @@
-substitutions:
-  friendly_name: Kitchen Light
-  hostname: kitchen_light
-  light_name: Kitchen
-
-packages:
-  base: !include device/shelly_1pm_light.yaml

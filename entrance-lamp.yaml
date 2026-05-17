@@ -1,9 +1,12 @@
 substitutions:
-  friendly_name: Bedside Lamp
-  hostname: bedside_lamp
-  light_name: Jonas Bedside
-  platform: ESP8266
+  friendly_name: Entrance Lamp
+  hostname: entrance-lamp
+  light_name: Entrance Lamp
+  
+esp8266:
   board: esp01_1m
+  framework:
+    version: recommended
 
 packages:
   base: !include device/generic.yaml
